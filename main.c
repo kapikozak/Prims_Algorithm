@@ -8,7 +8,6 @@
 typedef struct Node {
     int vertex;
     int weight;
-    int heapIndex;
     int prev;
     struct Node* next;
 } Node;
@@ -22,9 +21,6 @@ void exchange(Node** a, Node** b) {
     Node* temp = *a;
     *a = *b;
     *b = temp;
-    int tempIndex = (*a)->heapIndex;
-    (*a)->heapIndex = (*b)->heapIndex;
-    (*b)->heapIndex = tempIndex;
 }
 
 void upHeap(Node* tab[], int n) {
@@ -42,7 +38,6 @@ void upHeap(Node* tab[], int n) {
 void insertPrioQueue(prioQueue* q, Node* el) {
     if (q->first < NMAX) {
         q->tab[q->first] = el;
-        el->heapIndex = q->first;
         upHeap(q->tab, q->first++);
     }
 }
@@ -67,7 +62,6 @@ void removeMinPrioQueue(prioQueue* q, Node** el) {
     if (q->first > 0) {
         *el = q->tab[0];
         q->tab[0] = q->tab[--q->first];
-        q->tab[0]->heapIndex = 0;
         downHeap(q->tab, 0, q->first - 1);
     }
 }
@@ -90,7 +84,6 @@ void addEdge(Graph* graph, int src, int dst, int weight) {
     Node* newNode1 = (Node*)malloc(sizeof(Node));
     newNode1->vertex = dst;
     newNode1->weight = weight;
-    newNode1->heapIndex = -1;
     newNode1->prev = src;
     newNode1->next = graph->adjLists[src];
     graph->adjLists[src] = newNode1;
@@ -98,7 +91,6 @@ void addEdge(Graph* graph, int src, int dst, int weight) {
     Node* newNode2 = (Node*)malloc(sizeof(Node));
     newNode2->vertex = src;
     newNode2->weight = weight;
-    newNode2->heapIndex = -1;
     newNode2->prev = dst;
     newNode2->next = graph->adjLists[dst];
     graph->adjLists[dst] = newNode2;
